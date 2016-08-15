@@ -123,13 +123,13 @@ public class CityListActivity extends AppCompatActivity implements OnStartDragLi
         mEditor = mSharedPreferences.edit();
         setupRecyclerView((RecyclerView) vrecyclerView);
 
-        if(isOnline(getApplicationContext())) {
+       /* if(isOnline(getApplicationContext())) {
             mSwipeRefreshLayout.setRefreshing(true);
             mDb.updateCitys();
         }else{
             Snackbar.make(coordLayout, "Нет подключения к интернету", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-        }
+        }*/
 
 
     }
