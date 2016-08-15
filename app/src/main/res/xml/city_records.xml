@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<citys>
+    <record name="Kazan" lastupdate="1470404185" weather_description="Облачно" weather_id="800" main_pressure="695" main_temp="23,93" main_humidity="89" wind_speed="0,77" wind_deg="ЮЗ" sys_sunrise="1470704718" sys_sunset="1470760267" sys_country="RU" weather_icon="01d"/>
+    <record name="Moscow" lastupdate="1470404185" weather_description="Дождь" weather_id="501" main_pressure="710" main_temp="30,56" main_humidity="77" wind_speed="0,37" wind_deg="ЮВ" sys_sunrise="1470272130" sys_sunset="1470328936" sys_country="RU" weather_icon="02d"/>
+    <record name="Saratov" lastupdate="1470404185" weather_description="Лёгкий дождь" weather_id="800" main_pressure="689" main_temp="25,74" main_humidity="87" wind_speed="0,24" wind_deg="СЗ" sys_sunrise="1470272130" sys_sunset="1470328936" sys_country="RU" weather_icon="10d"/>
+    <record name="Samara" lastupdate="1470404185" weather_description="Ясно" weather_id="500" main_pressure="721" main_temp="26,37" main_humidity="69" wind_speed="0,55" wind_deg="СВ" sys_sunrise="1470272130" sys_sunset="1470328936" sys_country="RU" weather_icon="01n"/>
+    <record name="Murmansk" lastupdate="1470404185" weather_description="Ясно" weather_id="501" main_pressure="715" main_temp="32,18" main_humidity="95" wind_speed="0,48" wind_deg="С" sys_sunrise="1470272130" sys_sunset="1470328936" sys_country="RU" weather_icon="04d"/>
+</citys>

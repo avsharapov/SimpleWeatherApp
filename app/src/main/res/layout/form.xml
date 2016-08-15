@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_margin="16dp">
+
+
+    <ru.letnes.materialdesignsceleton.DelayAutoCompleteTextView
+        android:id="@+id/weather_title"
+        android:inputType="textCapSentences"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:imeOptions="flagNoExtractUi|actionSearch"
+        android:hint="Введите название города...">
+
+        <requestFocus />
+    </ru.letnes.materialdesignsceleton.DelayAutoCompleteTextView >
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="5dp"
+        android:visibility="gone"/>
+
+</FrameLayout  >
