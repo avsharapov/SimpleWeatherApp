@@ -1,7 +1,7 @@
 <resources>
 
 
-    <string name="app_name">Просто погода</string>
+    <string name="app_name">Просто погода 2</string>
     <string name="title_city_detail">Прогноз погоды</string>
     <string name="open_weather_maps_app_id">b42f03649b6bd223a5533958b69b0dac</string>
     <string name="ok">Добавить</string>
