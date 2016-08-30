@@ -4,7 +4,6 @@ package ru.letnes.materialdesignsceleton;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -13,28 +12,19 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-
 import android.widget.AdapterView;
-
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
@@ -76,6 +66,7 @@ public class CityListActivity extends AppCompatActivity implements OnStartDragLi
         setContentView(R.layout.activity_city_list);
         IntentFilter filter = new IntentFilter();
         filter.addAction("SWAP");
+        filter.addAction("INUSE");
         this.registerReceiver(_myReceiver, filter);
         this.mDb = new DbAdapter(getApplicationContext());
 
@@ -153,9 +144,18 @@ public class CityListActivity extends AppCompatActivity implements OnStartDragLi
     private class MyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case "SWAP":
+                    mmAdapter.swap(getSortData());
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    break;
+                case "INUSE":
+                    Snackbar.make(coordLayout, "Данный город уже присутствует.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    break;
+            }
 
-            mmAdapter.swap(getSortData());
-            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 

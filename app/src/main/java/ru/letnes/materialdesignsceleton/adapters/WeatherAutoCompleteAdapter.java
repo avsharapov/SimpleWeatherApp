@@ -1,7 +1,7 @@
 package ru.letnes.materialdesignsceleton.adapters;
 
 import android.content.Context;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,25 +10,19 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
 import ru.letnes.materialdesignsceleton.R;
-import ru.letnes.materialdesignsceleton.model.WeatherData;
+import ru.letnes.materialdesignsceleton.model.CityTips;
+import ru.letnes.materialdesignsceleton.model.List;
 import ru.letnes.materialdesignsceleton.service.APIservice;
+import rx.Observable;
 
 
 public class WeatherAutoCompleteAdapter extends BaseAdapter implements Filterable {
     private static final int MAX_RESULTS = 20;
     private final Context mContext;
-    private ArrayList<String> resultList = new ArrayList<String>();
-    WeatherData weatherData;
-    DbAdapter mDb;
+    private ArrayList<List> resultList = new ArrayList<List>();
     public WeatherAutoCompleteAdapter(Context context) {
         mContext = context;
 
@@ -42,7 +36,7 @@ public class WeatherAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
     @Override
     public String getItem(int index) {
-        return resultList.get(index);
+        return resultList.get(index).getName() + ", " + resultList.get(index).getSys().getCountry();
     }
 
     @Override
@@ -76,7 +70,7 @@ public class WeatherAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
                     // Assign the data to the FilterResults
                     resultList.clear();
-                    resultList = findWeatherData(mContext, constraint.toString());
+                    findWeatherData(mContext, constraint.toString());
 
                     filterResults.values = resultList;
                     filterResults.count = resultList.size();
@@ -88,7 +82,7 @@ public class WeatherAutoCompleteAdapter extends BaseAdapter implements Filterabl
             protected void publishResults(CharSequence constraint, FilterResults results) {
 
                 if (results != null && results.count > 0) {
-                    resultList = (ArrayList<String>) results.values;
+                    resultList = (ArrayList<List>) results.values;
                     notifyDataSetChanged();
                 } else {
                     notifyDataSetInvalidated();
@@ -101,26 +95,16 @@ public class WeatherAutoCompleteAdapter extends BaseAdapter implements Filterabl
     /**
      * Returns a search result for the given book title.
      */
-    private ArrayList<String> findWeatherData(Context mContext, String cityTitle) {
+    private void findWeatherData(Context mContext, String cityTitle) {
 
-        final ArrayList<String> arres = new ArrayList<String>();
-        ResponseBody responseBody;
+        Log.d("SHARAPOV", cityTitle);
+
         APIservice apiService = APIservice.retrofit.create(APIservice.class);
-        Call<ResponseBody> call = apiService.findCity(cityTitle,"like","ru", "population", "30","json", mContext.getString(R.string.open_weather_maps_app_id));
-        try {
-
-            responseBody = call.execute().body();
-            JSONObject data = new JSONObject(responseBody.string());
-            JSONArray list = data.getJSONArray("list");
-            for(int i=0;i<list.length();i++){
-                arres.add(list.getJSONObject(i).getString("name") + ", " + list.getJSONObject(i).getJSONObject("sys").getString("country"));
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return arres;
+        Observable<CityTips> call = apiService.findCity(cityTitle,"like","ru", "population", "30","json", mContext.getString(R.string.open_weather_maps_app_id));
+        call.subscribe(cityTips -> {
+                    Log.d("SHARAPOV", cityTips.getList().get(0).getName());
+                    resultList = cityTips.getList();
+                });
     }
 }
 

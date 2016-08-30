@@ -3,10 +3,8 @@ package ru.letnes.materialdesignsceleton;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -107,12 +105,12 @@ public class CityDetailFragment extends Fragment {
 
         Wind wind = city.get(0).getWind();
         Main main = city.get(0).getMain();
-        Double pressure = main.getPressure() * 0.750062;
+        Double pressure = Integer.parseInt(main.getPressure()) * 0.750062;
 
 
         String detailText = details.getDescription().toUpperCase(Locale.getDefault()) + "\n" +
                 "Влажность: " + main.getHumidity() + "%" + "\n" +
-                "Ветер: " + wind.getSpeed() + "м/с, " + getFormattedWind(wind.getDeg()) + "\n" +
+                "Ветер: " + wind.getSpeed() + "м/с, " + getFormattedWind(Double.parseDouble(wind.getDeg())) + "\n" +
                 "Давление: " + Math.round(pressure) + " мм.рт.ст.";
 
 
@@ -178,7 +176,7 @@ public class CityDetailFragment extends Fragment {
 
 
     }
-    static String getFormattedWind(double degrees) {
+    static String getFormattedWind(Double degrees) {
 
         String direction = "";
         if (degrees >= 337.5 || degrees < 22.5) {

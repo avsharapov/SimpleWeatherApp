@@ -3,7 +3,6 @@ package ru.letnes.materialdesignsceleton.model;
 
 import android.database.Cursor;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,11 +13,16 @@ public class Wind {
     private Double speed;
     @SerializedName("deg")
     @Expose
-    private Integer deg;
-
+    private String deg;
+    @SerializedName("var_beg")
+    @Expose
+    private Integer varBeg;
+    @SerializedName("var_end")
+    @Expose
+    private Integer varEnd;
     public Wind (Cursor mCursor) {
         this.speed = mCursor.getDouble(mCursor.getColumnIndex("wind_speed"));
-        this.deg = mCursor.getInt(mCursor.getColumnIndex("wind_deg"));
+        this.deg = mCursor.getString(mCursor.getColumnIndex("wind_deg"));
     }
     /**
      *
@@ -43,7 +47,7 @@ public class Wind {
      * @return
      *     The deg
      */
-    public Integer getDeg() {
+    public String getDeg() {
         return deg;
     }
 
@@ -52,8 +56,42 @@ public class Wind {
      * @param deg
      *     The deg
      */
-    public void setDeg(Integer deg) {
+    public void setDeg(String deg) {
         this.deg = deg;
     }
+    /**
+     *
+     * @return
+     *     The varBeg
+     */
+    public Integer getVarBeg() {
+        return varBeg;
+    }
 
+    /**
+     *
+     * @param varBeg
+     *     The var_beg
+     */
+    public void setVarBeg(Integer varBeg) {
+        this.varBeg = varBeg;
+    }
+
+    /**
+     *
+     * @return
+     *     The varEnd
+     */
+    public Integer getVarEnd() {
+        return varEnd;
+    }
+
+    /**
+     *
+     * @param varEnd
+     *     The var_end
+     */
+    public void setVarEnd(Integer varEnd) {
+        this.varEnd = varEnd;
+    }
 }
