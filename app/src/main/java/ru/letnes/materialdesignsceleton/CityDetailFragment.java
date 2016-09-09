@@ -1,12 +1,11 @@
 package ru.letnes.materialdesignsceleton;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,19 +25,18 @@ import ru.letnes.materialdesignsceleton.model.Wind;
 
 public class CityDetailFragment extends Fragment {
 
-    public static final String ARG_ITEM_ID = "item_id";
+    public TextView mCityTitle;
+    public TextView mUpdatedField;
+    public TextView mDetailsField;
+    public TextView mCurrentTemperatureField;
+    public TextView mWeatherIcon;
+    public CollapsingToolbarLayout mAppBarLayout;
 
-    private DbAdapter mDb;
-     String cityName;
     private Typeface weatherFont;
-     TextView cityTitle;
-     TextView updatedField;
-     TextView detailsField;
-     TextView currentTemperatureField;
-     TextView weatherIcon;
-    private CollapsingToolbarLayout appBarLayout;
+    private boolean mTwoPane;
+    private String cityName;
 
-    public boolean mTwoPane;
+    public static final String ARG_ITEM_ID = "item_id";
 
     public CityDetailFragment() {
     }
@@ -46,14 +44,8 @@ public class CityDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-
             cityName = getArguments().getString(ARG_ITEM_ID);
-
-            Activity activity = this.getActivity();
-            appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-
             weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
             if (getResources().getBoolean(R.bool.isTablet)) {
                 mTwoPane = true;
@@ -65,119 +57,88 @@ public class CityDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.city_detail, container, false);
-        cityTitle = (TextView) rootView.findViewById(R.id.city_title);
-        updatedField = (TextView) rootView.findViewById(R.id.updated_field);
-        detailsField = (TextView) rootView.findViewById(R.id.details_field);
-        currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
-        weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
-        weatherIcon.setTypeface(weatherFont);
-
-
-
+        mAppBarLayout = (CollapsingToolbarLayout) this.getActivity().findViewById(R.id.toolbar_layout);
+        mCityTitle = (TextView) rootView.findViewById(R.id.city_title);
+        mUpdatedField = (TextView) rootView.findViewById(R.id.updated_field);
+        mDetailsField = (TextView) rootView.findViewById(R.id.details_field);
+        mCurrentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
+        mWeatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
+        mWeatherIcon.setTypeface(weatherFont);
         renderWeatherData(getContext(), cityName);
         return rootView;
     }
 
-
-
-
     public void renderWeatherData(Context mCtx, String mCity) {
-
-
-        mDb = new DbAdapter(mCtx);
-
-        ArrayList<WeatherData> city = mDb.getCity(mCity);
-        Log.d("SHARAPOVVV",city.get(0).getName());
-
+        DbAdapter db = new DbAdapter(mCtx);
+        ArrayList<WeatherData> city = db.getCity(mCity);
         if(mTwoPane){
-            cityTitle.setText(city.get(0).getName().toUpperCase(Locale.US) +
-                    ", " +
-                    city.get(0).getSys().getCountry());
+            mCityTitle.setText(String.format(getString(R.string.city_title),city.get(0).getName().toUpperCase(Locale.US),city.get(0).getSys().getCountry()));
         }else{
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(city.get(0).getName().toUpperCase(Locale.US) +
-                        ", " +
-                        city.get(0).getSys().getCountry());
+            if (mAppBarLayout != null) {
+                mAppBarLayout.setTitle(String.format(getString(R.string.city_title),city.get(0).getName().toUpperCase(Locale.US),city.get(0).getSys().getCountry()));
             }
         }
-
         Weather details = city.get(0).getWeather().get(0);
-
         Wind wind = city.get(0).getWind();
         Main main = city.get(0).getMain();
         Double pressure = Integer.parseInt(main.getPressure()) * 0.750062;
-
-
         String detailText = details.getDescription().toUpperCase(Locale.getDefault()) + "\n" +
                 "Влажность: " + main.getHumidity() + "%" + "\n" +
                 "Ветер: " + wind.getSpeed() + "м/с, " + getFormattedWind(Double.parseDouble(wind.getDeg())) + "\n" +
                 "Давление: " + Math.round(pressure) + " мм.рт.ст.";
-
-
-        detailsField.setText(detailText);
-        String tempText = String.format("%.2f", main.getTemp()) + " ℃";
-        currentTemperatureField.setText(tempText);
-
+        mDetailsField.setText(detailText);
+        String tempText = String.format(getString(R.string.city_temp), main.getTemp());
+        mCurrentTemperatureField.setText(tempText);
         Date date = new Date(city.get(0).getDt()*1000L);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
-
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
         String formattedDate = "Последнее обновление: " + sdf.format(date);
-
-
-
-
-        updatedField.setText(formattedDate);
-
+        mUpdatedField.setText(formattedDate);
         switch (city.get(0).getWeather().get(0).getIcon()){
             case "01d":
-                weatherIcon.setText(R.string.wi_day_sunny);
+                mWeatherIcon.setText(R.string.wi_day_sunny);
                 break;
             case "02d":
-                weatherIcon.setText(R.string.wi_cloudy_gusts);
+                mWeatherIcon.setText(R.string.wi_cloudy_gusts);
                 break;
             case "03d":
-                weatherIcon.setText(R.string.wi_cloud_down);
+                mWeatherIcon.setText(R.string.wi_cloud_down);
                 break;
             case "10d":
-                weatherIcon.setText(R.string.wi_day_rain_mix);
+                mWeatherIcon.setText(R.string.wi_day_rain_mix);
                 break;
             case "11d":
-                weatherIcon.setText(R.string.wi_day_thunderstorm);
+                mWeatherIcon.setText(R.string.wi_day_thunderstorm);
                 break;
             case "13d":
-                weatherIcon.setText(R.string.wi_day_snow);
+                mWeatherIcon.setText(R.string.wi_day_snow);
                 break;
             case "01n":
-                weatherIcon.setText(R.string.wi_night_clear);
+                mWeatherIcon.setText(R.string.wi_night_clear);
                 break;
             case "04d":
-                weatherIcon.setText(R.string.wi_cloudy);
+                mWeatherIcon.setText(R.string.wi_cloudy);
                 break;
             case "04n":
-                weatherIcon.setText(R.string.wi_night_cloudy);
+                mWeatherIcon.setText(R.string.wi_night_cloudy);
                 break;
             case "02n":
-                weatherIcon.setText(R.string.wi_night_cloudy);
+                mWeatherIcon.setText(R.string.wi_night_cloudy);
                 break;
             case "03n":
-                weatherIcon.setText(R.string.wi_night_cloudy_gusts);
+                mWeatherIcon.setText(R.string.wi_night_cloudy_gusts);
                 break;
             case "10n":
-                weatherIcon.setText(R.string.wi_night_cloudy_gusts);
+                mWeatherIcon.setText(R.string.wi_night_cloudy_gusts);
                 break;
             case "11n":
-                weatherIcon.setText(R.string.wi_night_rain);
+                mWeatherIcon.setText(R.string.wi_night_rain);
                 break;
             case "13n":
-                weatherIcon.setText(R.string.wi_night_snow);
+                mWeatherIcon.setText(R.string.wi_night_snow);
                 break;
         }
-
-
-
     }
     static String getFormattedWind(Double degrees) {
-
         String direction = "";
         if (degrees >= 337.5 || degrees < 22.5) {
             direction = "C";
@@ -196,7 +157,6 @@ public class CityDetailFragment extends Fragment {
         } else if (degrees >= 292.5 || degrees < 22.5) {
             direction = "СЗ";
         }
-        return String.format(direction);
+        return direction;
     }
-
 }

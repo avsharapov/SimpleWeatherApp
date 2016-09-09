@@ -10,21 +10,24 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
 
 import ru.letnes.materialdesignsceleton.adapters.DbAdapter;
 
 
 public class CityDetailActivity extends AppCompatActivity {
+
+    public Toolbar mToolbar;
+    public CoordinatorLayout mCoordinatorLayout;
+    public FloatingActionButton mFab;
+
     private BroadcastReceiver _myReceiver = new MyReceiverDetail();
-    private CoordinatorLayout coordLayout;
     private DbAdapter mDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,33 +36,23 @@ public class CityDetailActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("UPDATE");
         this.registerReceiver(_myReceiver, filter);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
-        coordLayout = (CoordinatorLayout) findViewById(R.id.coordLayoutDetail);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isOnline(getApplicationContext())) {
-
-                    mDb.updateCity(getIntent().getStringExtra(CityDetailFragment.ARG_ITEM_ID),false);
-
-                }else{
-                    Snackbar.make(coordLayout, "Для обновления подключитесь к интернету...", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
+        mToolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        setSupportActionBar(mToolbar);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordLayoutDetail);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(view -> {
+            if(isOnline(getApplicationContext())) {
+                mDb.updateCity(getIntent().getStringExtra(CityDetailFragment.ARG_ITEM_ID),false);
+            }else{
+                Snackbar.make(mCoordinatorLayout, getString(R.string.no_internet_message2), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
-
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-
         if (savedInstanceState == null) {
-
             Bundle arguments = new Bundle();
             arguments.putString(CityDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(CityDetailFragment.ARG_ITEM_ID));
@@ -70,6 +63,7 @@ public class CityDetailActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -89,34 +83,30 @@ public class CityDetailActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
     }
+
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-
             NavUtils.navigateUpTo(this, new Intent(this, CityListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-
     public static boolean isOnline(Context context)
     {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting())
-        {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

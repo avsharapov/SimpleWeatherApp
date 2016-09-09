@@ -37,7 +37,7 @@ public class DbAdapter {
     private static final String TABLE_CREATE_CITYS = "create table city "
             + "(_id integer primary key autoincrement, name text,sys_country text, number integer, lastupdate integer, "
             + "weather_description text, weather_id integer, main_pressure text, main_temp double,"
-            + "main_humidity integer, wind_speed float, wind_deg text, sys_sunrise long, sys_sunset long, weather_icon text);";
+            + "main_humidity integer, wind_speed float, wind_deg text, sys_sunrise long, sys_sunset long, weather_icon text, city_id text);";
 
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -97,39 +97,40 @@ public class DbAdapter {
         Resources res = mCtx.getResources();
         XmlResourceParser _xml = res.getXml(R.xml.city_records);
         try {
+            if(getCitys().size() == 0) {
+                int eventType = _xml.getEventType();
+                while (eventType != XmlPullParser.END_DOCUMENT) {
 
-            int eventType = _xml.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-
-                if ((eventType == XmlPullParser.START_TAG)
-                        && (_xml.getName().equals("record"))) {
+                    if ((eventType == XmlPullParser.START_TAG)
+                            && (_xml.getName().equals("record"))) {
 
 
-                    values.put("name", _xml.getAttributeValue(0));
-                    values.put("lastupdate", _xml.getAttributeValue(1));
-                    values.put("weather_description", _xml.getAttributeValue(2));
-                    values.put("weather_id", _xml.getAttributeValue(3));
-                    values.put("main_pressure", _xml.getAttributeValue(4));
-                    values.put("main_temp", _xml.getAttributeValue(5));
-                    values.put("main_humidity", _xml.getAttributeValue(6));
-                    values.put("wind_speed", _xml.getAttributeValue(7));
-                    values.put("wind_deg", _xml.getAttributeValue(8));
-                    values.put("sys_sunrise", _xml.getAttributeValue(9));
-                    values.put("sys_sunset", _xml.getAttributeValue(10));
-                    values.put("sys_country", _xml.getAttributeValue(11));
-                    values.put("weather_icon", _xml.getAttributeValue(12));
-                    mDb.insert(DATA_TABLE_CITYS, null, values);
+                        values.put("name", _xml.getAttributeValue(0));
+                        values.put("lastupdate", _xml.getAttributeValue(1));
+                        values.put("weather_description", _xml.getAttributeValue(2));
+                        values.put("weather_id", _xml.getAttributeValue(3));
+                        values.put("main_pressure", _xml.getAttributeValue(4));
+                        values.put("main_temp", _xml.getAttributeValue(5));
+                        values.put("main_humidity", _xml.getAttributeValue(6));
+                        values.put("wind_speed", _xml.getAttributeValue(7));
+                        values.put("wind_deg", _xml.getAttributeValue(8));
+                        values.put("sys_sunrise", _xml.getAttributeValue(9));
+                        values.put("sys_sunset", _xml.getAttributeValue(10));
+                        values.put("sys_country", _xml.getAttributeValue(11));
+                        values.put("weather_icon", _xml.getAttributeValue(12));
+                        values.put("city_id", _xml.getAttributeValue(13));
+                        mDb.insert(DATA_TABLE_CITYS, null, values);
+                    }
+                    eventType = _xml.next();
                 }
-                eventType = _xml.next();
+            } else {
+                Intent in = new Intent("EXIST");
+                mCtx.sendBroadcast(in);
             }
-
         }
         // Catch errors
-        catch (XmlPullParserException e) {
+        catch (XmlPullParserException | IOException e) {
             Log.e("ERROR", e.getMessage(), e);
-        } catch (IOException e) {
-            Log.e("ERROR", e.getMessage(), e);
-
         } finally {
             // Close the xml file
             Intent in = new Intent("SWAP");
@@ -218,7 +219,7 @@ public class DbAdapter {
                     values.put("sys_sunset", o.getSys().getSunset());
                     values.put("sys_country", o.getSys().getCountry());
                     values.put("weather_icon", o.getWeather().get(0).getIcon());
-
+                    values.put("city_id", o.getWeather().get(0).getId());
                     mDb.update(DATA_TABLE_CITYS, values, "name = ?",new String[] { mName });
                     if(mFlag) {
                         Intent in = new Intent("SWAP");
@@ -237,7 +238,7 @@ public class DbAdapter {
     public void updateCitys(){
         mDbHelper = new DatabaseHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
-        ArrayList<WeatherData> Citys = new ArrayList<WeatherData>();
+        ArrayList<WeatherData> Citys;
 
         Citys = getCitys();
         for(int i=0;i<Citys.size();i++) {
@@ -278,6 +279,7 @@ public class DbAdapter {
                         values.put("sys_sunset", o.getSys().getSunset());
                         values.put("sys_country", o.getSys().getCountry());
                         values.put("weather_icon", o.getWeather().get(0).getIcon());
+                        values.put("city_id", o.getWeather().get(0).getId());
                         mDb.insert(DATA_TABLE_CITYS, null, values);
 
                         Intent in = new Intent("SWAP");
