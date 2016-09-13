@@ -206,8 +206,11 @@ public class DbAdapter {
                     ContentValues values = new ContentValues();
                     WeatherData o = weatherData;
                     values.put("name", o.getName());
+
                     values.put("lastupdate", o.getDt());
+
                     values.put("weather_description", o.getWeather().get(0).getDescription());
+
                     values.put("weather_id", o.getWeather().get(0).getId());
                     values.put("main_pressure", o.getMain().getPressure());
                     values.put("main_temp", o.getMain().getTemp());
@@ -227,6 +230,10 @@ public class DbAdapter {
                         Intent in = new Intent("UPDATE");
                         mCtx.sendBroadcast(in);
                     }
+
+                }, e -> {
+                    Log.e("DBadapter", "Error call retrofit", e);
+                    Observable.<WeatherData>empty();
                 });
 
     }

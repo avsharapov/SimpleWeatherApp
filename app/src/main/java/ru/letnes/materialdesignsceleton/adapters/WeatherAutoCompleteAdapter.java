@@ -1,6 +1,7 @@
 package ru.letnes.materialdesignsceleton.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import ru.letnes.materialdesignsceleton.R;
 import ru.letnes.materialdesignsceleton.model.CityTips;
 import ru.letnes.materialdesignsceleton.model.List;
+import ru.letnes.materialdesignsceleton.model.WeatherData;
 import ru.letnes.materialdesignsceleton.service.APIservice;
 import rx.Observable;
 
@@ -85,7 +87,10 @@ public class WeatherAutoCompleteAdapter extends BaseAdapter implements Filterabl
         Observable<CityTips> call = apiService.findCity(cityTitle,"like","ru", "population", "30","json", mContext.getString(R.string.open_weather_maps_app_id));
         call.subscribe(cityTips -> {
                     resultList = cityTips.getList();
-                });
+                }, e -> {
+            Log.e("AutoCompleteAdapter", "Error call retrofit", e);
+            Observable.<WeatherData>empty();
+        });
     }
 }
 
