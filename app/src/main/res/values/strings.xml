@@ -1,15 +1,31 @@
 <resources>
 
-
-    <string name="app_name">Просто погода</string>
+    <string name="weather_title">Просто погода 2</string>
+    <string name="app_name">Просто погода 2</string>
     <string name="title_city_detail">Прогноз погоды</string>
     <string name="open_weather_maps_app_id">b42f03649b6bd223a5533958b69b0dac</string>
     <string name="ok">Добавить</string>
     <string name="selected_place">Выбранный город</string>
     <string name="hint_form">Начните вводить город на англ. языке.</string>
+    <string name="city_title" formatted="false">%s, %s</string>
+    <string name="city_temp" formatted="false">%.2f ℃</string>
 
-    <string name="GPSAlertDialogTitle">Gps alert</string>
-    <string name="GPSAlertDialogMessage">dialog message</string>
+
+
+    <string name="city_desk" formatted="false">температура: %s ℃</string>
+
+    <string name="add_city">Добавить город</string>
+    <string name="add_button_text">Добавить город</string>
+    <string name="city_already_exist">Данный город уже присутствует.</string>
+    <string name="test_city_already_exist">Для добавления тестовых данных список должен быть пуст.</string>
+    <string name="test_data_added">Тестовые данные добавлены</string>
+
+    <string name="no_internet">Нет подключения к интернету</string>
+    <string name="no_internet_message1">Для добавления городов подключитесь к интернету...</string>
+    <string name="no_internet_message2">Для обновления подключитесь к интернету...</string>
+    <string name="database_clear">База очищена!</string>
+
+
     <string name="succes_weather_update">Данные о погоде успешно обновлены</string>
     <string name="error_weather_update">Извините, но данные о погоде не получены.</string>
     <string name="action_settings">Настройки</string>

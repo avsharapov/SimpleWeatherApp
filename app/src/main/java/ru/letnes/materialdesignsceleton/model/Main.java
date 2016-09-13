@@ -3,26 +3,32 @@ package ru.letnes.materialdesignsceleton.model;
 
 import android.database.Cursor;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Main {
 
     @SerializedName("temp")
     @Expose
-    private Float temp;
+    private Double temp;
     @SerializedName("pressure")
     @Expose
-    private Integer pressure;
+    private String pressure;
     @SerializedName("humidity")
     @Expose
     private Integer humidity;
-
+    @SerializedName("temp_min")
+    @Expose
+    private Double tempMin;
+    @SerializedName("temp_max")
+    @Expose
+    private Double tempMax;
     public Main (Cursor mCursor){
-        this.temp = mCursor.getFloat(mCursor.getColumnIndex("main_temp"));
-        this.pressure = mCursor.getInt(mCursor.getColumnIndex("main_pressure"));
+        this.temp = mCursor.getDouble(mCursor.getColumnIndex("main_temp"));
+        this.pressure = mCursor.getString(mCursor.getColumnIndex("main_pressure"));
         this.humidity = mCursor.getInt(mCursor.getColumnIndex("main_humidity"));
     }
     /**
@@ -30,7 +36,7 @@ public class Main {
      * @return
      *     The temp
      */
-    public Float getTemp() {
+    public Double getTemp() {
         return temp;
     }
 
@@ -39,7 +45,7 @@ public class Main {
      * @param temp
      *     The temp
      */
-    public void setTemp(Float temp) {
+    public void setTemp(Double temp) {
         this.temp = temp;
     }
 
@@ -48,7 +54,7 @@ public class Main {
      * @return
      *     The pressure
      */
-    public Integer getPressure() {
+    public String getPressure() {
         return pressure;
     }
 
@@ -57,7 +63,7 @@ public class Main {
      * @param pressure
      *     The pressure
      */
-    public void setPressure(Integer pressure) {
+    public void setPressure(String pressure) {
         this.pressure = pressure;
     }
 
@@ -78,6 +84,40 @@ public class Main {
     public void setHumidity(Integer humidity) {
         this.humidity = humidity;
     }
+    /**
+     *
+     * @return
+     *     The tempMin
+     */
+    public Double getTempMin() {
+        return tempMin;
+    }
 
+    /**
+     *
+     * @param tempMin
+     *     The temp_min
+     */
+    public void setTempMin(Double tempMin) {
+        this.tempMin = tempMin;
+    }
+
+    /**
+     *
+     * @return
+     *     The tempMax
+     */
+    public Double getTempMax() {
+        return tempMax;
+    }
+
+    /**
+     *
+     * @param tempMax
+     *     The temp_max
+     */
+    public void setTempMax(Double tempMax) {
+        this.tempMax = tempMax;
+    }
 
 }
