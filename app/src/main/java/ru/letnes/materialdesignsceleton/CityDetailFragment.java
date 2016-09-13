@@ -71,13 +71,15 @@ public class CityDetailFragment extends Fragment {
     public void renderWeatherData(Context mCtx, String mCity) {
         DbAdapter db = new DbAdapter(mCtx);
         ArrayList<WeatherData> city = db.getCity(mCity);
-        if(mTwoPane){
+        mCityTitle.setText(String.format(getString(R.string.city_title),city.get(0).getName().toUpperCase(Locale.US),city.get(0).getSys().getCountry()));
+
+        /*if(mTwoPane){
             mCityTitle.setText(String.format(getString(R.string.city_title),city.get(0).getName().toUpperCase(Locale.US),city.get(0).getSys().getCountry()));
         }else{
             if (mAppBarLayout != null) {
                 mAppBarLayout.setTitle(String.format(getString(R.string.city_title),city.get(0).getName().toUpperCase(Locale.US),city.get(0).getSys().getCountry()));
             }
-        }
+        }*/
         Weather details = city.get(0).getWeather().get(0);
         Wind wind = city.get(0).getWind();
         Main main = city.get(0).getMain();

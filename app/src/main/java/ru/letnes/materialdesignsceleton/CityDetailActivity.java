@@ -37,6 +37,7 @@ public class CityDetailActivity extends AppCompatActivity {
         filter.addAction("UPDATE");
         this.registerReceiver(_myReceiver, filter);
         mToolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+
         setSupportActionBar(mToolbar);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordLayoutDetail);
         mFab = (FloatingActionButton) findViewById(R.id.fab);

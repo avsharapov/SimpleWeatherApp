@@ -180,9 +180,8 @@ public class DbAdapter {
         //Cursor mCursor = mDb.rawQuery("SELECT * FROM " + DATA_TABLE_CITYS + " WHERE name=?",a);
         Cursor mCursor = mDb.query(true, DATA_TABLE_CITYS, null, "name = ?", new String[] { cityTitle }, null, null, null, null);
 
-        if (mCursor != null) {
+        if (mCursor != null && mCursor.getCount() > 0) {
             mCursor.moveToFirst();
-
             WeatherData wdata = new WeatherData(mCursor);
 
             city.add(wdata);
@@ -228,9 +227,6 @@ public class DbAdapter {
                         Intent in = new Intent("UPDATE");
                         mCtx.sendBroadcast(in);
                     }
-                    Log.e("updateCity", weatherData.getWeather()
-                            .get(0)
-                            .getDescription());
                 });
 
     }
@@ -284,9 +280,6 @@ public class DbAdapter {
 
                         Intent in = new Intent("SWAP");
                         mCtx.sendBroadcast(in);
-                        Log.e("setCity", weatherData.getWeather()
-                                .get(0)
-                                .getDescription());
                     });
         } else {
             Intent in = new Intent("INUSE");

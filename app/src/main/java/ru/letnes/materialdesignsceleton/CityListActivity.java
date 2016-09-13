@@ -101,16 +101,8 @@ public class CityListActivity extends AppCompatActivity implements OnStartDragLi
         mEditor = mSharedPreferences.edit();
         mEditor.apply();
         setupRecyclerView((RecyclerView) mRecyclerView);
-        //updateWeather();
-    }
-
-    private void updateWeather() {
-        mSwipeRefreshLayout.setRefreshing(true);
-
 
     }
-
-
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -174,7 +166,7 @@ public class CityListActivity extends AppCompatActivity implements OnStartDragLi
         mInput.setOnItemClickListener((adapterView, view1, position, id) -> {
             String selectItem = (String) adapterView.getItemAtPosition(position);
             String city = selectItem.split(",")[0];
-            mInput.setText(selectItem);
+            mInput.setText(city);
 
         });
         builder.setView(formView);
