@@ -13,6 +13,8 @@
         android:textSize="@dimen/title_size"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:text="title"
+        android:layout_marginTop="@dimen/margin_top_title"
         />
 
     <TextView
